@@ -1,0 +1,9 @@
+{
+  "name": "generatePortrait",
+  "version": "1.0.0",
+  "description": "调用 Replicate API 生成 AI 职业照",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "latest"
+  }
+}

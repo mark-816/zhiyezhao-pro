@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "openapi": []
+  },
+  "config": {
+    "timeout": 60,
+    "env": {
+      "REPLICATE_API_TOKEN": "在此处填写你的 Replicate API Token",
+      "REPLICATE_FLUX_MODEL": "black-forest-labs/flux-dev",
+      "REPLICATE_FLUX_VERSION": ""
+    }
+  }
+}

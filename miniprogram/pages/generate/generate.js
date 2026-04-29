@@ -1,6 +1,6 @@
 /**
  * 职业照Pro - 生成中页
- * @description 进度动画 + 等待（模拟，后续对接API）
+ * @description 调用云函数 generatePortrait 对接 Replicate API 生成职业照
  */
 
 const app = getApp()
@@ -13,33 +13,36 @@ Page({
 
     // 状态文本
     statusMessages: [
-      '正在分析照片...',
-      '正在提取面部特征...',
-      '正在生成形象...',
+      '正在准备生成参数...',
+      '正在提交AI任务...',
+      '正在生成形象（约4秒）...',
       '正在优化细节...',
-      '正在渲染背景...',
-      '正在最终优化...',
+      '即将完成...',
     ],
     currentStatusIndex: 0,
-    currentStatus: '正在分析照片...',
+    currentStatus: '正在准备生成参数...',
 
     // 当前选择的风格和背景
     selectedStyleName: '',
     selectedBackgroundName: '',
+    selectedStyleId: '',
+    selectedBackgroundId: '',
 
     // 生成完成
     isComplete: false,
+    isError: false,
+    errorMessage: '',
 
-    // 定时器
-    _timer: null,
+    // 云函数返回结果
+    generateResult: null,
   },
 
   onLoad() {
     // 读取全局选中的风格和背景
     const styleId = app.globalData.currentStyle || 'business'
     const bgId = app.globalData.currentBackground || 'office'
+    const sourceImagePath = app.globalData.sourceImagePath || ''
 
-    // 获取名称（引用upload页面的数据格式）
     const styleMap = {
       business: '商务西装',
       casual: '简约衬衫',
@@ -56,72 +59,149 @@ Page({
     this.setData({
       selectedStyleName: styleMap[styleId] || '商务西装',
       selectedBackgroundName: bgMap[bgId] || '办公室背景',
+      selectedStyleId: styleId,
+      selectedBackgroundId: bgId,
     })
 
-    // 开始模拟进度
-    this.startMockProgress()
+    // 开始调用真实API
+    this.callGenerateAPI(styleId, bgId, sourceImagePath)
   },
 
   onUnload() {
-    // 清除定时器
-    if (this.data._timer) {
-      clearInterval(this.data._timer)
+    // 页面卸载时无需清理（云函数自动完成）
+  },
+
+  // ============================================================
+  // 调用云函数 generatePortrait
+  // ============================================================
+  async callGenerateAPI(styleId, bgId, sourceImagePath) {
+    try {
+      // 进度展示：准备
+      this.updateProgress(5, '正在准备生成参数...')
+
+      // 检查云开发能力
+      if (!wx.cloud) {
+        this.showError('微信云开发未初始化，请检查 app.js 配置')
+        return
+      }
+
+      // 进度展示：提交中
+      this.updateProgress(15, '正在提交AI任务...')
+
+      // 调用云函数
+      const res = await wx.cloud.callFunction({
+        name: 'generatePortrait',
+        data: {
+          style: styleId,
+          background: bgId,
+          numOutputs: 4,
+          sourceImageUrl: sourceImagePath || '',
+          prompt: '', // 让云函数自动构建提示词
+        },
+      })
+
+      const result = res.result
+
+      if (result.code !== 0) {
+        this.showError(result.message || 'AI 生成失败')
+        return
+      }
+
+      // 进度展示：生成中
+      this.updateProgress(50, '正在生成形象（约4秒）...')
+
+      // 短暂展示进度动画，让用户有等待感
+      await this.animateProgress(50, 80, 1500, '正在优化细节...')
+      await this.animateProgress(80, 100, 800, '即将完成...')
+
+      // 保存结果
+      this.setData({
+        generateResult: result.data,
+        isComplete: true,
+        currentStatus: '✨ 生成完成！',
+        progress: 100,
+        progressPercent: '100%',
+      })
+
+      // 延迟跳转到结果页，携带参数
+      setTimeout(() => {
+        const images = result.data.images || []
+        const imagesStr = JSON.stringify(images)
+        const generateId = result.data.generateId || ''
+
+        wx.redirectTo({
+          url: `/pages/result/result?images=${encodeURIComponent(imagesStr)}&generateId=${generateId}&style=${styleId}&background=${bgId}`,
+        })
+      }, 800)
+
+    } catch (err) {
+      console.error('[generate] cloud function error:', err)
+      this.showError('网络异常，请检查网络后重试')
     }
   },
 
   // ============================================================
-  // 模拟生成进度
+  // 工具方法
   // ============================================================
-  startMockProgress() {
-    const totalDuration = 4000 // 4秒完成
-    const interval = 100 // 每100ms更新一次
-    const step = 100 / (totalDuration / interval)
 
-    let progress = 0
-    let statusIndex = 0
-
-    const timer = setInterval(() => {
-      progress += step
-      if (progress >= 100) {
-        progress = 100
-        clearInterval(timer)
-        this.onGenerateComplete()
-      }
-
-      // 更新进度文字
-      const newStatusIndex = Math.min(
-        Math.floor((progress / 100) * this.data.statusMessages.length),
-        this.data.statusMessages.length - 1
-      )
-      if (newStatusIndex !== statusIndex) {
-        statusIndex = newStatusIndex
-      }
-
-      this.setData({
-        progress: Math.round(progress),
-        progressPercent: Math.round(progress) + '%',
-        currentStatus: this.data.statusMessages[statusIndex],
-        currentStatusIndex: statusIndex,
-      })
-    }, interval)
-
-    this.data._timer = timer
+  /** 更新进度和状态文本 */
+  updateProgress(progress, status) {
+    this.setData({
+      progress: Math.round(progress),
+      progressPercent: Math.round(progress) + '%',
+      currentStatus: status,
+    })
   },
 
-  // ============================================================
-  // 生成完成
-  // ============================================================
-  onGenerateComplete() {
-    this.setData({
-      currentStatus: '✨ 生成完成！',
-      isComplete: true,
-    })
+  /** 平滑动画过渡进度 */
+  animateProgress(from, to, duration, statusText) {
+    return new Promise((resolve) => {
+      const startTime = Date.now()
+      const step = () => {
+        const elapsed = Date.now() - startTime
+        const ratio = Math.min(elapsed / duration, 1)
+        const currentProgress = from + (to - from) * ratio
 
-    // 延迟跳转到结果页
-    setTimeout(() => {
-      wx.redirectTo({
-        url: '/pages/result/result',
-      })
-    }, 800)
+        this.setData({
+          progress: Math.round(currentProgress),
+          progressPercent: Math.round(currentProgress) + '%',
+          currentStatus: statusText,
+        })
+
+        if (ratio < 1) {
+          setTimeout(step, 50)
+        } else {
+          resolve()
+        }
+      }
+      step()
+    })
+  },
+
+  /** 显示错误 */
+  showError(message) {
+    this.setData({
+      isError: true,
+      isComplete: true,
+      errorMessage: message,
+      currentStatus: '❌ 生成失败',
+    })
+  },
+
+  /** 重试 */
+  retry() {
+    wx.navigateBack({
+      delta: 1,
+    })
+  },
+
+  /** 返回首页 */
+  goHome() {
+    wx.switchTab({
+      url: '/pages/index/index',
+      fail: () => {
+        wx.reLaunch({ url: '/pages/index/index' })
+      },
+    })
   },
 })

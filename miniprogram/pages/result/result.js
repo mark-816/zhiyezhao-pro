@@ -1,19 +1,14 @@
 /**
  * 职业照Pro - 结果页
- * @description 预览 + 下载 + 分享 + 收藏
+ * @description 预览云函数返回的真实AI图片 + 保存到相册 + 分享 + 收藏
  */
 
 const app = getApp()
 
 Page({
   data: {
-    // 生成结果（模拟数据）
-    results: [
-      { id: 1, url: 'zp_result_1', desc: '商务西装 · 办公室背景' },
-      { id: 2, url: 'zp_result_2', desc: '商务西装 · 城市背景' },
-      { id: 3, url: 'zp_result_3', desc: '简约衬衫 · 办公室背景' },
-      { id: 4, url: 'zp_result_4', desc: '简约衬衫 · 纯色背景' },
-    ],
+    // 生成结果（从云函数返回的真实数据）
+    results: [],
 
     // 当前查看的索引
     currentIndex: 0,
@@ -23,22 +18,48 @@ Page({
     isFavorited: false,
     favoritedIds: [],
 
-    // 生成ID（用于保存到历史）
+    // 生成ID
     generateId: '',
 
-    // 是否显示更多缩略图
-    showThumbnails: true,
+    // 图片加载状态
+    imageLoading: true,
+    imageError: false,
+
+    // 当前选择的风格和背景（从参数读取）
+    currentStyle: '',
+    currentBackground: '',
   },
 
   onLoad(options) {
-    const { id } = options || {}
+    const { images, generateId, style, background } = options || {}
+    const generateIdVal = generateId || 'gen_' + Date.now()
 
-    // 生成唯一ID
-    const generateId = id || 'gen_' + Date.now()
-    this.setData({ generateId })
+    // 解析图片列表（从URL参数传入）
+    let results = []
+    try {
+      if (images) {
+        results = JSON.parse(decodeURIComponent(images))
+      }
+    } catch (e) {
+      console.warn('[result] parse images failed, using fallback:', e)
+    }
+
+    // 如果没有结果（异常降级），使用空数组
+    if (!results || results.length === 0) {
+      results = []
+    }
+
+    this.setData({
+      results,
+      generateId: generateIdVal,
+      currentStyle: style || app.globalData.currentStyle || '',
+      currentBackground: background || app.globalData.currentBackground || '',
+    })
 
     // 设置当前显示结果
-    this.showResult(0)
+    if (results.length > 0) {
+      this.showResult(0)
+    }
 
     // 加载收藏状态
     const favoritedIds = wx.getStorageSync('zp_favorited_ids') || []
@@ -74,6 +95,8 @@ Page({
       currentIndex: index,
       currentResult: result,
       isFavorited,
+      imageLoading: true,
+      imageError: false,
     })
   },
 
@@ -97,68 +120,77 @@ Page({
     this.showResult(index)
   },
 
+  /** 图片加载完成 */
+  onImageLoad() {
+    this.setData({ imageLoading: false })
+  },
+
+  /** 图片加载失败 */
+  onImageError() {
+    this.setData({ imageLoading: false, imageError: true })
+  },
+
   // ============================================================
   // 保存到相册
   // ============================================================
   saveToAlbum() {
     const result = this.data.currentResult
-    if (!result) return
+    if (!result || !result.url) {
+      wx.showToast({ title: '暂无图片可保存', icon: 'none' })
+      return
+    }
 
     wx.showLoading({ title: '保存中...' })
 
-    // 模拟保存（真实场景：从网络或本地获取图片）
-    setTimeout(() => {
-      wx.hideLoading()
-      wx.showToast({
-        title: '已保存到相册 ✅',
-        icon: 'success',
-        duration: 2000,
-      })
-
-      // 统计分享次数
-      this.incrementShareCount()
-    }, 1000)
-
-    // 真实场景代码（注释掉，当前仅模拟）
-    /*
-    wx.saveImageToPhotosAlbum({
-      filePath: result.url,
-      success() {
-        wx.hideLoading()
-        wx.showToast({ title: '已保存到相册 ✅', icon: 'success' })
-      },
-      fail(err) {
-        wx.hideLoading()
-        if (err.errMsg.indexOf('auth') !== -1) {
-          wx.showModal({
-            title: '提示',
-            content: '需要您授权保存到相册',
-            success(res) {
-              if (res.confirm) {
-                wx.openSetting()
+    // 网络图片需要先下载到本地临时路径
+    wx.downloadFile({
+      url: result.url,
+      success: (downloadRes) => {
+        if (downloadRes.statusCode === 200) {
+          // 下载成功，保存到相册
+          wx.saveImageToPhotosAlbum({
+            filePath: downloadRes.tempFilePath,
+            success: () => {
+              wx.hideLoading()
+              wx.showToast({ title: '已保存到相册 ✅', icon: 'success' })
+              this.incrementShareCount()
+            },
+            fail: (err) => {
+              wx.hideLoading()
+              if (err.errMsg && err.errMsg.indexOf('auth deny') !== -1) {
+                // 引导用户授权
+                wx.showModal({
+                  title: '需要授权',
+                  content: '保存到相册需要您授权相册权限',
+                  success: (res) => {
+                    if (res.confirm) {
+                      wx.openSetting()
+                    }
+                  },
+                })
+              } else {
+                wx.showToast({ title: '保存失败，请重试', icon: 'none' })
               }
             },
           })
+        } else {
+          wx.hideLoading()
+          wx.showToast({ title: '图片下载失败', icon: 'none' })
         }
       },
+      fail: () => {
+        wx.hideLoading()
+        wx.showToast({ title: '图片下载失败，请检查网络', icon: 'none' })
+      },
     })
-    */
   },
 
   // ============================================================
   // 换背景重生成
   // ============================================================
   regenerateWithNewBg() {
-    wx.showModal({
-      title: '换背景重生成',
-      content: '将跳转到上传页重新选择背景生成',
-      success: (res) => {
-        if (res.confirm) {
-          wx.navigateTo({
-            url: '/pages/upload/upload',
-          })
-        }
-      },
+    wx.navigateTo({
+      url: '/pages/upload/upload',
     })
   },
 
@@ -166,7 +198,7 @@ Page({
   // 分享
   // ============================================================
   onShare() {
-    // 默认走 onShareAppMessage
+    // 走 onShareAppMessage
     this.incrementShareCount()
   },
 
@@ -211,9 +243,7 @@ Page({
     wx.switchTab({
       url: '/pages/index/index',
       fail: () => {
-        wx.reLaunch({
-          url: '/pages/index/index',
-        })
+        wx.reLaunch({ url: '/pages/index/index' })
       },
     })
   },
@@ -227,8 +257,8 @@ Page({
     const record = {
       id: this.data.generateId,
       time: Date.now(),
-      style: app.globalData.currentStyle || 'business',
-      background: app.globalData.currentBackground || 'office',
+      style: this.data.currentStyle || app.globalData.currentStyle || 'business',
+      background: this.data.currentBackground || app.globalData.currentBackground || 'office',
       resultsCount: this.data.results.length,
       favorited: false,
       sharedTimes: 0,

@@ -36,13 +36,31 @@
 
   </block>
 
-  <!-- ===== 完成状态 ===== -->
+  <!-- ===== 完成 / 失败状态 ===== -->
   <block wx:elif="{{isComplete}}">
-    <view class="zp-generate-complete zp-animate-scaleIn">
-      <view class="zp-generate-complete-icon">✅</view>
-      <view class="zp-text-xl zp-font-bolder zp-mt-md">生成完成！</view>
-      <view class="zp-text-sm zp-text-secondary zp-mt-sm">即将跳转到结果页...</view>
-    </view>
+
+    <!-- 成功 -->
+    <block wx:if="{{!isError}}">
+      <view class="zp-generate-complete zp-animate-scaleIn">
+        <view class="zp-generate-complete-icon">✅</view>
+        <view class="zp-text-xl zp-font-bolder zp-mt-md">生成完成！</view>
+        <view class="zp-text-sm zp-text-secondary zp-mt-sm">即将跳转到结果页...</view>
+      </view>
+    </block>
+
+    <!-- 失败 -->
+    <block wx:elif="{{isError}}">
+      <view class="zp-generate-complete zp-animate-scaleIn">
+        <view class="zp-generate-complete-icon" style="font-size: 100rpx;">❌</view>
+        <view class="zp-text-xl zp-font-bolder zp-mt-md zp-text-red">生成失败</view>
+        <view class="zp-text-sm zp-text-secondary zp-mt-sm zp-ph-lg zp-text-center">{{errorMessage}}</view>
+        <view class="zp-flex zp-gap-md zp-mt-xl">
+          <button class="zp-btn zp-btn-outline" bindtap="retry">🔄 重试</button>
+          <button class="zp-btn zp-btn-primary" bindtap="goHome">🏠 返回首页</button>
+        </view>
+      </view>
+    </block>
+
   </block>
 
 </view>
