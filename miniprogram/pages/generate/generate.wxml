@@ -1,0 +1,48 @@
+<!-- 职业照Pro - 生成中页 -->
+<view class="zp-generate-page zp-flex-col zp-flex-center">
+
+  <!-- ===== 生成中状态 ===== -->
+  <block wx:if="{{!isComplete}}">
+
+    <!-- 动态图标 -->
+    <view class="zp-generate-icon zp-animate-pulse">
+      <view class="zp-generate-icon-ring"></view>
+      <view class="zp-generate-icon-ring zp-generate-icon-ring-2"></view>
+      <view class="zp-generate-icon-inner">✨</view>
+    </view>
+
+    <!-- 进度百分比 -->
+    <view class="zp-generate-percent zp-text-3xl zp-font-bolder zp-text-primary-color zp-mt-xl">{{progressPercent}}</view>
+
+    <!-- 进度条 -->
+    <view class="zp-generate-progress-bar">
+      <view class="zp-generate-progress-fill" style="width: {{progressPercent}};"></view>
+    </view>
+
+    <!-- 状态文字 -->
+    <view class="zp-generate-status zp-text-md zp-text-secondary zp-mt-lg zp-animate-fadeIn">{{currentStatus}}</view>
+
+    <!-- 当前选择信息 -->
+    <view class="zp-generate-info zp-card zp-mt-xl">
+      <view class="zp-flex zp-items-center zp-gap-md zp-mb-sm">
+        <text class="zp-text-sm zp-text-secondary">风格：</text>
+        <text class="zp-text-sm zp-font-bold">{{selectedStyleName}}</text>
+      </view>
+      <view class="zp-flex zp-items-center zp-gap-md">
+        <text class="zp-text-sm zp-text-secondary">背景：</text>
+        <text class="zp-text-sm zp-font-bold">{{selectedBackgroundName}}</text>
+      </view>
+    </view>
+
+  </block>
+
+  <!-- ===== 完成状态 ===== -->
+  <block wx:elif="{{isComplete}}">
+    <view class="zp-generate-complete zp-animate-scaleIn">
+      <view class="zp-generate-complete-icon">✅</view>
+      <view class="zp-text-xl zp-font-bolder zp-mt-md">生成完成！</view>
+      <view class="zp-text-sm zp-text-secondary zp-mt-sm">即将跳转到结果页...</view>
+    </view>
+  </block>
+
+</view>

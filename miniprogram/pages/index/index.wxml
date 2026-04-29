@@ -1,0 +1,64 @@
+<!-- 职业照Pro - 首页 -->
+<view class="zp-index-page">
+
+  <!-- ===== 顶部品牌头图 ===== -->
+  <view class="zp-index-hero">
+    <view class="zp-index-hero-bg"></view>
+    <view class="zp-index-hero-content zp-safe-top">
+      <view class="zp-index-brand-icon">📷</view>
+      <view class="zp-index-title zp-text-3xl zp-text-inverse zp-font-bolder">职业照Pro</view>
+      <view class="zp-index-subtitle zp-text-base zp-text-inverse">AI生成你的专业形象照</view>
+    </view>
+  </view>
+
+  <!-- ===== CTA 按钮区 ===== -->
+  <view class="zp-index-cta">
+    <button class="zp-btn zp-btn-accent zp-btn-lg zp-btn-block" bindtap="goToUpload">
+      {{ctaText}}
+    </button>
+    <view class="zp-index-cta-tip zp-text-sm zp-text-tertiary zp-text-center zp-mt-sm">
+      上传照片 → 选择风格 → AI生成
+    </view>
+  </view>
+
+  <!-- ===== 特色卖点 ===== -->
+  <view class="zp-index-features zp-ph-lg">
+    <view class="zp-section-title">为什么选择职业照Pro</view>
+    <view class="zp-index-feature-list">
+      <view
+        class="zp-card zp-index-feature-card zp-animate-fadeIn"
+        wx:for="{{features}}"
+        wx:key="index"
+        data-index="{{index}}"
+      >
+        <view class="zp-index-feature-icon">{{item.icon}}</view>
+        <view class="zp-index-feature-title zp-text-md zp-font-bold">{{item.title}}</view>
+        <view class="zp-index-feature-desc zp-text-sm zp-text-secondary">{{item.desc}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ===== 底部功能区 ===== -->
+  <view class="zp-index-actions zp-ph-lg zp-mt-lg">
+    <view class="zp-index-action-row zp-flex zp-flex-between zp-gap-md">
+      <view class="zp-card-clickable zp-flex-1 zp-index-action-card" bindtap="goToMy">
+        <view class="zp-text-center">
+          <view class="zp-text-xl zp-mb-sm">🖼️</view>
+          <view class="zp-text-sm zp-font-bold">我的相册</view>
+        </view>
+      </view>
+      <view class="zp-card-clickable zp-flex-1 zp-index-action-card" bindtap="goToUpload">
+        <view class="zp-text-center">
+          <view class="zp-text-xl zp-mb-sm">📤</view>
+          <view class="zp-text-sm zp-font-bold">分享给朋友</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ===== 品牌 Footer ===== -->
+  <view class="zp-footer">
+    <view class="zp-footer-text">职业照Pro · AI让职业照更简单</view>
+  </view>
+
+</view>

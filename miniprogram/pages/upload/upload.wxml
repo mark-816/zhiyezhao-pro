@@ -1,0 +1,119 @@
+<!-- 职业照Pro - 上传照片页 -->
+<view class="zp-upload-page">
+
+  <!-- ===== 步骤指示器 ===== -->
+  <view class="zp-upload-steps">
+    <view class="zp-step-item" wx:for="{{steps}}" wx:key="index">
+      <view class="zp-step-dot {{index < currentStep ? 'done' : index === currentStep ? 'active' : ''}}">
+        <text wx:if="{{index < currentStep}}">✓</text>
+        <text wx:else>{{index + 1}}</text>
+      </view>
+      <view class="zp-step-line {{index < steps.length - 1 ? (index < currentStep ? 'active' : '') : ''}}"></view>
+    </view>
+  </view>
+  <view class="zp-flex zp-justify-center zp-gap-lg zp-mb-md">
+    <view class="zp-step-label {{currentStep >= 0 ? 'active' : ''}}" wx:for="{{steps}}" wx:key="index">{{item}}</view>
+  </view>
+
+  <!-- ===== 步骤 1: 上传照片 ===== -->
+  <block wx:if="{{currentStep === 0}}">
+
+    <!-- 拍照指南 -->
+    <view class="zp-section-title">📋 拍照指南</view>
+    <view class="zp-ph-lg">
+      <view
+        class="zp-card zp-upload-tip-card zp-animate-fadeIn"
+        wx:for="{{tips}}"
+        wx:key="index"
+        data-index="{{index}}"
+      >
+        <view class="zp-flex zp-items-center zp-gap-md">
+          <view class="zp-upload-tip-icon">{{item.icon}}</view>
+          <view class="zp-flex-1">
+            <view class="zp-text-md zp-font-bold">{{item.title}}</view>
+            <view class="zp-text-sm zp-text-secondary">{{item.desc}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 上传按钮 -->
+    <view class="zp-ph-lg zp-mt-lg">
+      <button class="zp-btn zp-btn-accent zp-btn-lg zp-btn-block" bindtap="chooseImage">
+        📸 拍照或选择照片
+      </button>
+
+      <!-- 如果已有照片（redo），显示预览 -->
+      <view wx:if="{{hasImage}}" class="zp-upload-preview-card zp-card zp-mt-md zp-animate-fadeIn">
+        <view class="zp-flex zp-items-center zp-gap-md">
+          <image class="zp-upload-thumb" src="{{sourceImagePath}}" mode="aspectFill" />
+          <view class="zp-flex-1">
+            <view class="zp-text-md zp-font-bold">照片已上传 ✓</view>
+            <view class="zp-text-sm zp-text-secondary">点击预览或重新拍摄</view>
+          </view>
+          <view class="zp-text-sm zp-text-primary-color zp-font-bold" bindtap="retakePhoto">重新拍</view>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <!-- ===== 步骤 2: 选择风格 ===== -->
+  <block wx:if="{{currentStep === 1}}">
+
+    <!-- 照片预览小图 -->
+    <view class="zp-upload-preview-row zp-ph-lg zp-mb-md">
+      <view class="zp-card zp-flex zp-items-center zp-gap-md">
+        <image class="zp-upload-preview-small" src="{{sourceImagePath}}" mode="aspectFill" />
+        <view class="zp-flex-1">
+          <view class="zp-text-sm zp-font-bold">原图</view>
+          <view class="zp-text-xs zp-text-tertiary">已上传 ✓</view>
+        </view>
+        <view class="zp-text-sm zp-text-primary-color" bindtap="retakePhoto">重选</view>
+      </view>
+    </view>
+
+    <!-- 风格选择 -->
+    <view class="zp-section-title">👔 选择风格</view>
+    <scroll-view class="zp-upload-horizontal-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+      <view class="zp-upload-option-list">
+        <view
+          class="zp-upload-option-card {{item.checked ? 'checked' : ''}}"
+          wx:for="{{styles}}"
+          wx:key="id"
+          data-id="{{item.id}}"
+          bindtap="selectStyle"
+        >
+          <view class="zp-upload-option-icon">{{item.icon}}</view>
+          <view class="zp-upload-option-name">{{item.name}}</view>
+          <view wx:if="{{item.checked}}" class="zp-upload-checkmark">✓</view>
+        </view>
+      </view>
+    </scroll-view>
+
+    <!-- 背景选择 -->
+    <view class="zp-section-title zp-mt-lg">🏞️ 选择背景</view>
+    <scroll-view class="zp-upload-horizontal-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+      <view class="zp-upload-option-list">
+        <view
+          class="zp-upload-option-card {{item.checked ? 'checked' : ''}}"
+          wx:for="{{backgrounds}}"
+          wx:key="id"
+          data-id="{{item.id}}"
+          bindtap="selectBackground"
+        >
+          <view class="zp-upload-option-icon">{{item.icon}}</view>
+          <view class="zp-upload-option-name">{{item.name}}</view>
+          <view wx:if="{{item.checked}}" class="zp-upload-checkmark">✓</view>
+        </view>
+      </view>
+    </scroll-view>
+
+    <!-- 生成按钮 -->
+    <view class="zp-ph-lg zp-mt-xl zp-safe-area-bottom">
+      <button class="zp-btn zp-btn-accent zp-btn-lg zp-btn-block" bindtap="startGenerate">
+        {{generateBtnText}}
+      </button>
+    </view>
+  </block>
+
+</view>

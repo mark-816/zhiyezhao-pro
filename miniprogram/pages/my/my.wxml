@@ -1,0 +1,113 @@
+<!-- 职业照Pro - 我的页面 -->
+<view class="zp-my-page">
+
+  <!-- ===== 用户信息区域 ===== -->
+  <view class="zp-my-user zp-card zp-ph-lg">
+    <!-- 已登录 -->
+    <block wx:if="{{isLoggedIn}}">
+      <view class="zp-flex zp-items-center zp-gap-md">
+        <view class="zp-my-avatar">
+          <image class="zp-my-avatar-img" src="{{userInfo.avatarUrl}}" mode="aspectFill" />
+        </view>
+        <view class="zp-flex-1">
+          <view class="zp-text-md zp-font-bold">{{userInfo.nickName}}</view>
+          <view class="zp-text-sm zp-text-secondary">欢迎回来</view>
+        </view>
+        <view class="zp-text-sm zp-text-primary-color" bindtap="handleLogin">切换</view>
+      </view>
+    </block>
+
+    <!-- 未登录 -->
+    <block wx:else>
+      <view class="zp-my-login-hint zp-flex zp-items-center zp-gap-md" bindtap="handleLogin">
+        <view class="zp-my-avatar zp-my-avatar-default">
+          <text class="zp-text-2xl">👤</text>
+        </view>
+        <view class="zp-flex-1">
+          <view class="zp-text-md zp-font-bold">点击登录</view>
+          <view class="zp-text-sm zp-text-secondary">登录后可同步数据</view>
+        </view>
+        <text class="zp-text-lg zp-text-tertiary">›</text>
+      </view>
+    </block>
+  </view>
+
+  <!-- ===== 统计卡片 ===== -->
+  <view class="zp-my-stats zp-flex zp-flex-between zp-ph-lg zp-mt-md">
+    <view class="zp-card zp-my-stat-card zp-text-center">
+      <view class="zp-text-xl zp-font-bolder zp-text-primary-color">{{stats.generateCount}}</view>
+      <view class="zp-text-sm zp-text-secondary">生成次数</view>
+    </view>
+    <view class="zp-card zp-my-stat-card zp-text-center">
+      <view class="zp-text-xl zp-font-bolder zp-text-accent">{{stats.favoritedCount}}</view>
+      <view class="zp-text-sm zp-text-secondary">已收藏</view>
+    </view>
+    <view class="zp-card zp-my-stat-card zp-text-center">
+      <view class="zp-text-xl zp-font-bolder zp-text-primary">{{stats.sharedCount}}</view>
+      <view class="zp-text-sm zp-text-secondary">分享次数</view>
+    </view>
+  </view>
+
+  <!-- ===== 历史记录 ===== -->
+  <view class="zp-my-history zp-mt-lg zp-ph-lg">
+    <view class="zp-flex zp-flex-between zp-items-center zp-mb-md">
+      <view class="zp-section-title" style="padding:0;">📸 生成记录</view>
+      <view wx:if="{{hasHistory}}" class="zp-text-sm zp-text-tertiary" bindtap="clearHistory">清除</view>
+    </view>
+
+    <!-- 有历史数据 -->
+    <block wx:if="{{hasHistory}}">
+      <view class="zp-my-history-grid">
+        <view
+          class="zp-my-history-item"
+          wx:for="{{historyList}}"
+          wx:key="id"
+          data-id="{{item.id}}"
+          bindtap="viewHistory"
+        >
+          <view class="zp-my-history-placeholder" style="background: linear-gradient(135deg, var(--zp-primary-bg), #DBEAFE);">
+            <text class="zp-text-2xl">📸</text>
+          </view>
+          <view class="zp-my-history-time zp-text-xs zp-text-tertiary">{{item.timeStr}}</view>
+        </view>
+      </view>
+    </block>
+
+    <!-- 空状态 -->
+    <block wx:else>
+      <view class="zp-empty zp-animate-fadeIn">
+        <view class="zp-empty-icon">📸</view>
+        <view class="zp-empty-text">还没有生成记录</view>
+        <view class="zp-text-sm zp-text-tertiary zp-mt-sm">去生成你的第一张职业照吧</view>
+        <button class="zp-btn zp-btn-primary zp-mt-md" bindtap="goToUpload">开始生成</button>
+      </view>
+    </block>
+  </view>
+
+  <!-- ===== 设置列表 ===== -->
+  <view class="zp-my-settings zp-mt-lg zp-ph-lg">
+    <view class="zp-section-title" style="padding:0;">⚙️ 设置</view>
+    <view class="zp-card">
+      <view
+        class="zp-my-setting-item zp-flex zp-items-center"
+        wx:for="{{settings}}"
+        wx:key="index"
+        data-index="{{index}}"
+        bindtap="onSettingTap"
+      >
+        <view class="zp-my-setting-icon">{{item.icon}}</view>
+        <view class="zp-flex-1">
+          <view class="zp-text-md">{{item.title}}</view>
+          <view class="zp-text-sm zp-text-tertiary">{{item.desc}}</view>
+        </view>
+        <text class="zp-text-lg zp-text-tertiary">›</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- ===== 品牌 Footer ===== -->
+  <view class="zp-footer">
+    <view class="zp-footer-text">职业照Pro v1.0.0</view>
+  </view>
+
+</view>

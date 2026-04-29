@@ -1,0 +1,144 @@
+/**
+ * 职业照Pro - 上传页样式
+ */
+
+.zp-upload-page {
+  min-height: 100vh;
+  padding-bottom: var(--zp-spacing-2xl);
+}
+
+/* ===== 步骤指示器容器 ===== */
+.zp-upload-steps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--zp-spacing-lg) var(--zp-spacing-lg) var(--zp-spacing-xs);
+}
+
+/* ===== 拍照指南 ===== */
+.zp-upload-tip-card {
+  padding: var(--zp-spacing-md);
+  margin-bottom: var(--zp-spacing-sm);
+}
+
+.zp-upload-tip-card:nth-child(1) { animation-delay: 0.05s; }
+.zp-upload-tip-card:nth-child(2) { animation-delay: 0.1s; }
+.zp-upload-tip-card:nth-child(3) { animation-delay: 0.15s; }
+.zp-upload-tip-card:nth-child(4) { animation-delay: 0.2s; }
+
+.zp-upload-tip-icon {
+  width: 64rpx;
+  height: 64rpx;
+  font-size: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--zp-primary-bg);
+  border-radius: var(--zp-radius-md);
+  flex-shrink: 0;
+}
+
+/* ===== 上传预览 ===== */
+.zp-upload-preview-card {
+  padding: var(--zp-spacing-md);
+}
+
+.zp-upload-thumb {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: var(--zp-radius-md);
+  background: var(--zp-bg-tertiary);
+  flex-shrink: 0;
+}
+
+.zp-upload-preview-small {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: var(--zp-radius-sm);
+  background: var(--zp-bg-tertiary);
+  flex-shrink: 0;
+}
+
+.zp-upload-preview-row {
+  margin-top: var(--zp-spacing-sm);
+}
+
+/* ===== 横向滚动选择 ===== */
+.zp-upload-horizontal-scroll {
+  padding: 0 var(--zp-spacing-lg);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.zp-upload-option-list {
+  display: flex;
+  gap: var(--zp-spacing-md);
+  padding: var(--zp-spacing-sm) 0;
+}
+
+.zp-upload-option-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 160rpx;
+  height: 180rpx;
+  background: var(--zp-bg-primary);
+  border-radius: var(--zp-radius-lg);
+  box-shadow: var(--zp-shadow-sm);
+  border: 3rpx solid transparent;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.zp-upload-option-card:active {
+  transform: scale(0.95);
+}
+
+.zp-upload-option-card.checked {
+  border-color: var(--zp-primary);
+  background: var(--zp-primary-bg);
+  box-shadow: var(--zp-shadow-md);
+}
+
+.zp-upload-option-icon {
+  font-size: 48rpx;
+  margin-bottom: 8rpx;
+}
+
+.zp-upload-option-name {
+  font-size: var(--zp-font-sm);
+  color: var(--zp-text-primary);
+  font-weight: 500;
+}
+
+.zp-upload-checkmark {
+  position: absolute;
+  top: 8rpx;
+  right: 8rpx;
+  width: 32rpx;
+  height: 32rpx;
+  background: var(--zp-primary);
+  color: var(--zp-text-inverse);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18rpx;
+  font-weight: 700;
+}
+
+/* ===== 占位图片样式 ===== */
+.zp-upload-placeholder {
+  width: 100%;
+  height: 300rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--zp-bg-secondary);
+  border: 2rpx dashed var(--zp-border);
+  border-radius: var(--zp-radius-lg);
+  color: var(--zp-text-tertiary);
+}
