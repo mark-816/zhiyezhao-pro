@@ -12,24 +12,44 @@
   <!-- ===== 大图预览区 ===== -->
   <view class="zp-result-preview zp-ph-lg zp-mt-md" wx:if="{{currentResult}}">
     <view class="zp-result-preview-header zp-flex zp-flex-between zp-mb-sm">
-      <view class="zp-text-sm zp-text-secondary">{{currentIndex + 1}} / {{results.length}}</view>
+      <view class="zp-text-sm zp-text-secondary">
+        {{results.length > 0 ? (currentIndex + 1) + ' / ' + results.length : ''}}
+      </view>
       <view class="zp-text-sm zp-text-secondary">{{currentResult.desc}}</view>
     </view>
 
     <view class="zp-result-preview-image-wrap">
-      <!-- 占位图 - 用渐变背景模拟 -->
-      <view class="zp-result-placeholder-img">
+      <!-- 真实图片 -->
+      <image
+        class="zp-result-real-image"
+        src="{{currentResult.url}}"
+        mode="aspectFill"
+        bindload="onImageLoad"
+        binderror="onImageError"
+        wx:if="{{currentResult.url}}"
+      ></image>
+
+      <!-- 加载中占位 -->
+      <view class="zp-result-placeholder-img" wx:if="{{imageLoading}}">
         <view class="zp-result-placeholder-inner" style="background: linear-gradient(135deg, var(--zp-primary-bg), #DBEAFE);">
-          <view class="zp-text-3xl">📸</view>
-          <view class="zp-text-sm zp-text-secondary zp-mt-sm">职业照预设 {{currentIndex + 1}}</view>
+          <view class="zp-loading-spinner"></view>
+          <view class="zp-text-sm zp-text-secondary zp-mt-sm">加载中...</view>
         </view>
       </view>
 
-      <!-- 左右切换热区 -->
-      <view class="zp-result-swipe-left" bindtap="switchResult" data-direction="prev">
+      <!-- 加载失败占位 -->
+      <view class="zp-result-placeholder-img" wx:elif="{{imageError}}">
+        <view class="zp-result-placeholder-inner" style="background: linear-gradient(135deg, #FEE2E2, #FEF3C7);">
+          <view class="zp-text-3xl">⚠️</view>
+          <view class="zp-text-sm zp-text-secondary zp-mt-sm">图片加载失败</view>
+        </view>
+      </view>
+
+      <!-- 左右切换热区（仅多张时显示） -->
+      <view class="zp-result-swipe-left" bindtap="switchResult" data-direction="prev" wx:if="{{results.length > 1}}">
         <text class="zp-result-arrow zp-text-xl">‹</text>
       </view>
-      <view class="zp-result-swipe-right" bindtap="switchResult" data-direction="next">
+      <view class="zp-result-swipe-right" bindtap="switchResult" data-direction="next" wx:if="{{results.length > 1}}">
         <text class="zp-result-arrow zp-text-xl">›</text>
       </view>
     </view>
@@ -58,7 +78,7 @@
   </view>
 
   <!-- ===== 缩略图横向滚动选择 ===== -->
-  <view class="zp-result-thumbnails zp-mt-lg zp-ph-lg">
+  <view class="zp-result-thumbnails zp-mt-lg zp-ph-lg" wx:if="{{results.length > 0}}">
     <view class="zp-section-title">所有结果</view>
     <scroll-view class="zp-result-thumb-scroll" scroll-x enhanced show-scrollbar="{{false}}">
       <view class="zp-result-thumb-list">
@@ -69,7 +89,13 @@
           data-index="{{index}}"
           bindtap="selectThumbnail"
         >
-          <view class="zp-result-thumb-placeholder" style="background: linear-gradient(135deg, var(--zp-primary-bg), #DBEAFE);">
+          <image
+            class="zp-result-thumb-image"
+            src="{{item.url}}"
+            mode="aspectFill"
+            wx:if="{{item.url}}"
+          ></image>
+          <view class="zp-result-thumb-placeholder" wx:else>
             <text class="zp-text-lg">📸</text>
           </view>
           <view class="zp-result-thumb-num">{{index + 1}}</view>

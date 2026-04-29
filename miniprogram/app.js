@@ -35,6 +35,13 @@ App({
   // 生命周期
   // ============================================================
   onLaunch() {
+    // ===== 初始化云开发 =====
+    // 如需指定环境，将 DYNAMIC_CURRENT_ENV 替换为你的环境ID
+    wx.cloud.init({
+      env: wx.cloud.DYNAMIC_CURRENT_ENV,
+      traceUser: true,
+    })
+
     // 从本地存储恢复历史记录
     const history = wx.getStorageSync('zp_history_list') || []
     this.globalData.historyList = history

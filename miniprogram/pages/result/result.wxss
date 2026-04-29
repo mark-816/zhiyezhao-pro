@@ -18,6 +18,13 @@
   border-radius: var(--zp-radius-xl);
   overflow: hidden;
   box-shadow: var(--zp-shadow-md);
+  background: var(--zp-bg-tertiary);
+}
+
+.zp-result-real-image {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  display: block;
 }
 
 .zp-result-placeholder-img {
@@ -38,6 +45,21 @@
   border-radius: var(--zp-radius-xl);
 }
 
+/* 加载中旋转动画 */
+.zp-loading-spinner {
+  width: 48rpx;
+  height: 48rpx;
+  border: 4rpx solid var(--zp-bg-tertiary);
+  border-top-color: var(--zp-primary);
+  border-radius: 50%;
+  animation: zp-rotate 0.8s linear infinite;
+}
+
+@keyframes zp-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 /* 左右切换热区 */
 .zp-result-swipe-left,
 .zp-result-swipe-right {
@@ -48,12 +70,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: 0;
+  opacity: 0.6;
   transition: opacity 0.2s;
 }
 
-.zp-result-preview-image-wrap:hover .zp-result-swipe-left,
-.zp-result-preview-image-wrap:hover .zp-result-swipe-right {
+.zp-result-swipe-left:active,
+.zp-result-swipe-right:active {
   opacity: 1;
 }
 
@@ -68,6 +90,7 @@
   text-align: center;
   line-height: 60rpx;
   color: var(--zp-text-primary);
+  font-size: 32rpx;
 }
 
 /* ===== 操作按钮行 ===== */
@@ -127,6 +150,12 @@
   border-color: var(--zp-primary);
 }
 
+.zp-result-thumb-image {
+  width: 140rpx;
+  height: 180rpx;
+  display: block;
+}
+
 .zp-result-thumb-placeholder {
   width: 140rpx;
   height: 180rpx;
@@ -134,6 +163,7 @@
   align-items: center;
   justify-content: center;
   border-radius: var(--zp-radius-sm);
+  background: linear-gradient(135deg, var(--zp-primary-bg), #DBEAFE);
 }
 
 .zp-result-thumb-num {
@@ -142,6 +172,9 @@
   right: 4rpx;
   font-size: 18rpx;
   color: var(--zp-text-tertiary);
+  background: rgba(255, 255, 255, 0.7);
+  padding: 0 6rpx;
+  border-radius: 4rpx;
 }
 
 /* ===== 底部 ===== */
