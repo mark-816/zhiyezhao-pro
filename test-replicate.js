@@ -18,6 +18,8 @@
  */
 
 // Node 18+ 原生支持 fetch
+// 方式1：设置环境变量 $env:REPLICATE_API_TOKEN="你的Key"
+// 方式2：直接替换下面这行的 Key（不要提交到GitHub）
 const API_TOKEN = process.env.REPLICATE_API_TOKEN || '填入你的API_KEY'
 
 // ===== 配置 =====
