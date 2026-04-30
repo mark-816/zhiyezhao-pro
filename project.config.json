@@ -36,5 +36,6 @@
   },
   "libVersion": "3.15.2",
   "appid": "wx109bc7838fd329c0",
-  "projectname": "职业照Pro"
+  "projectname": "职业照Pro",
+  "compileType": "miniprogram"
 }
