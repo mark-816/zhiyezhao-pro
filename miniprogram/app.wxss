@@ -156,6 +156,21 @@ page {
   background: var(--zp-primary-bg);
 }
 
+/* 描边按钮 */
+.zp-btn-outline {
+  background: transparent;
+  color: var(--zp-primary);
+  border: 2rpx solid var(--zp-primary);
+  padding: 24rpx 48rpx;
+}
+
+.zp-btn-outline:active {
+  background: var(--zp-primary-bg);
+}
+
+/* 危险文字 */
+.zp-text-red { color: var(--zp-danger); }
+
 /* 禁用按钮 */
 .zp-btn-disabled {
   opacity: 0.5;

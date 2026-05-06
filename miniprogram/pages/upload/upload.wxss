@@ -92,6 +92,10 @@
   flex-shrink: 0;
 }
 
+.zp-upload-option-card:last-child {
+  margin-right: var(--zp-spacing-lg);
+}
+
 .zp-upload-option-card:active {
   transform: scale(0.95);
 }

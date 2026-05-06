@@ -30,17 +30,41 @@ const db = cloud.database()
 // 风格/背景 → 英文提示词映射（用于 FLUX 模型）
 // =============================================================
 const STYLE_PROMPTS = {
-  business: 'professional business suit, formal office portrait',
-  casual: 'simple casual shirt, smart casual office look',
-  leisure: 'leisure casual wear, relaxed smart style',
-  chinese: 'traditional Chinese costume, modern elegance',
+  business: 'professional dark navy business suit, white dress shirt, silk tie, formal executive portrait',
+  business_light: 'light gray business suit, crisp white shirt, professional business look',
+  casual: 'crisp white button-up shirt, no tie, smart casual elegance',
+  leisure: 'cream-colored cashmere sweater or knitwear, relaxed cozy style',
+  chinese: 'traditional Chinese costume, elegant embroidery, modern qipao or tang suit',
+  medical: 'white medical lab coat, professional healthcare uniform, stethoscope',
+  it: 'casual IT tech style, subtle hoodie or smart polo, modern startup vibe',
+  academic: 'tweed blazer with elbow patches, scholarly glasses, professor style',
+  creative: 'modern artistic fashion, bold colors, creative industry look',
+  formal_skirt: 'professional business skirt suit or dress, elegant female executive',
+  uniform: 'formal uniform attire, polished and authoritative',
+  vintage: 'vintage classic style, retro 1950s suit or dress, timeless elegance',
 }
 
 const BACKGROUND_PROMPTS = {
-  office: 'clean modern office background, soft lighting',
-  solid: 'solid color background, studio lighting, clean gradient',
-  city: 'blurry city skyline background, urban professional',
-  nature: 'soft nature background, warm natural lighting',
+  office: 'clean modern office background with desk and plants, soft natural lighting from window',
+  solid_white: 'pure white solid background, studio lighting, clean minimalist',
+  solid_blue: 'soft professional blue solid background, corporate headshot lighting',
+  solid_gray: 'elegant light gray solid background, soft gradient, modern studio',
+  gradient: 'smooth professional blue-to-white gradient background, modern corporate',
+  library: 'library bookshelf background, warm academic atmosphere, intellectual',
+  city: 'blurry city skyline through window, urban professional daytime',
+  nature: 'soft green nature background with plants, warm natural daylight',
+  campus: 'university campus background, academic setting, spring greenery',
+  window: 'large window with soft daylight, minimal elegant office setting',
+  lobby: 'modern hotel or corporate lobby, marble interior, grand but subtle',
+  night: 'night cityscape background, bokeh city lights, sophisticated urban',
+  minimal: 'clean white space with subtle shadow, minimalist zen aesthetic',
+  warm: 'warm golden ambient lighting, soft cozy background, homey studio',
+  tech: 'futuristic tech pattern background, blue tone, innovation vibe',
+  outdoor: 'outdoor garden setting, natural sunlight, professional casual',
+  coffee: 'cozy coffee shop interior, warm ambient, modern casual',
+  conference: 'conference room with glass walls, professional meeting setting',
+  stone: 'raw concrete industrial background, modern urban lofts',
+  sunset: 'warm sunset gradient background, golden hour lighting',
 }
 
 const DEFAULT_PROMPT = 'professional headshot photo, high quality, realistic, detailed skin texture, natural expression, looking at camera, good lighting, 8K, photorealistic'

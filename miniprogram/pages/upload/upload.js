@@ -15,21 +15,45 @@ Page({
     sourceImagePath: '',
     hasImage: false,
 
-    // 风格选择
+    // 风格选择（12套）
     styles: [
       { id: 'business', name: '商务西装', icon: '👔', checked: true },
+      { id: 'business_light', name: '浅色西装', icon: '👔', checked: false },
       { id: 'casual', name: '简约衬衫', icon: '👕', checked: false },
       { id: 'leisure', name: '休闲便装', icon: '🧥', checked: false },
       { id: 'chinese', name: '国风', icon: '🥋', checked: false },
+      { id: 'medical', name: '医护白袍', icon: '🩺', checked: false },
+      { id: 'it', name: 'IT极客', icon: '💻', checked: false },
+      { id: 'academic', name: '学术知性', icon: '📚', checked: false },
+      { id: 'creative', name: '创意潮装', icon: '🎨', checked: false },
+      { id: 'formal_skirt', name: '职业裙装', icon: '👗', checked: false },
+      { id: 'uniform', name: '制服', icon: '🎖️', checked: false },
+      { id: 'vintage', name: '复古风', icon: '🕰️', checked: false },
     ],
     selectedStyle: 'business',
 
-    // 背景选择
+    // 背景选择（20种）
     backgrounds: [
       { id: 'office', name: '办公室', icon: '🏢', checked: true },
-      { id: 'solid', name: '纯色', icon: '🎨', checked: false },
-      { id: 'city', name: '城市', icon: '🌆', checked: false },
-      { id: 'nature', name: '自然', icon: '🌳', checked: false },
+      { id: 'solid_white', name: '纯白', icon: '⬜', checked: false },
+      { id: 'solid_blue', name: '商务蓝', icon: '🟦', checked: false },
+      { id: 'solid_gray', name: '高级灰', icon: '⬜', checked: false },
+      { id: 'gradient', name: '渐变商务', icon: '🌊', checked: false },
+      { id: 'library', name: '图书馆', icon: '📚', checked: false },
+      { id: 'city', name: '城市天际', icon: '🌆', checked: false },
+      { id: 'nature', name: '自然绿植', icon: '🌳', checked: false },
+      { id: 'campus', name: '校园', icon: '🏫', checked: false },
+      { id: 'window', name: '落地窗', icon: '🪟', checked: false },
+      { id: 'lobby', name: '大堂', icon: '🏛️', checked: false },
+      { id: 'night', name: '夜景城市', icon: '🌃', checked: false },
+      { id: 'minimal', name: '极简留白', icon: '🏷️', checked: false },
+      { id: 'warm', name: '暖光温馨', icon: '🕯️', checked: false },
+      { id: 'tech', name: '科技感', icon: '🔬', checked: false },
+      { id: 'outdoor', name: '户外花园', icon: '🌻', checked: false },
+      { id: 'coffee', name: '咖啡厅', icon: '☕', checked: false },
+      { id: 'conference', name: '会议室', icon: '📋', checked: false },
+      { id: 'stone', name: '水泥工业', icon: '🧱', checked: false },
+      { id: 'sunset', name: '落日余晖', icon: '🌅', checked: false },
     ],
     selectedBackground: 'office',
 
